@@ -1,9 +1,14 @@
+//! package imports
 import express from 'express'; //import syntax is of module js
 //default is require syntax(common js)
 import dotenv from 'dotenv'
 import colors from 'colors'
-import connectDB from './config/db.js';
+import cors from 'cors'
+import morgan from 'morgan' //both cors and morgan are middlewares
 
+//! file imports
+import connectDB from './config/db.js';
+import testRoutes from './routes/test.routes.js'
 
 //below line means we are calling .env file in our application and our appln configure ho chuka ha
 dotenv.config();
@@ -16,10 +21,13 @@ connectDB()
 //rest object
 const app = express();
 
+//middlewares
+app.use(express.json());//we could also use body parser 
+app.use(cors());//to enable cors package we just need to call it
+app.use(morgan('dev'))
+
 //route
-app.get('/', (req, res) => {
-    res.send('<h1>Welcome to OUR JOB PORTAL !</h1>')
-})
+app.use('/api/v1/test', testRoutes); //'/api/v1/test' is the naming convention we need to follow, uske bad we can add subroutes in the routes folder files
 
 const port = process.env.PORT || 8080;
 //listen
