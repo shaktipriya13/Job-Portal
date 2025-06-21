@@ -2,9 +2,16 @@ import express from 'express'; //import syntax is of module js
 //default is require syntax(common js)
 import dotenv from 'dotenv'
 import colors from 'colors'
+import connectDB from './config/db.js';
+
 
 //below line means we are calling .env file in our application and our appln configure ho chuka ha
 dotenv.config();
+
+
+//first envronmnt variables must be compiled and then connection to  database must be established
+//* connect to db
+connectDB()
 
 //rest object
 const app = express();
