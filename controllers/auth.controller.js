@@ -15,25 +15,25 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Register Controller
 
-export const registerController = async (req, res) => {
+export const registerController = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
 
         //performing validation
         if (!name) {
-            return res.status(400).send({ success: false, message: "Please provide name" });
+            next("name is required");
         }
         if (!email) {
-            return res.status(400).send({ success: false, message: "Please provide email." })
+            next("Please provide email.")
         }
         if (!password) {
-            return res.status(400).send({ success: false, message: "Please provide password." })
+            next("Please provide password.")
         }
 
         //now we are validating is email already exists
         const existingUser = await userModels.findOne({ email });//	This is a Mongoose query that looks in the database for one user whose email matches the provided value.
         if (existingUser) {
-            return res.status(200).send({ success: false, message: "Email already register. Please login." })
+            next("Email already register. Please login.");  
         }
         //once all above conditions are checked we then create a new user
         const user = await userModels.create({ name, email, password });
@@ -44,12 +44,7 @@ export const registerController = async (req, res) => {
         })
         //for creation 201 status code is used
     } catch (err) {
-        console.log(err);
-        res.status(400).send({
-            message: 'Error in Register Controller',
-            success: false,
-            err
-        })
+        next(err); //using errMiddlware
     }
 }
 
