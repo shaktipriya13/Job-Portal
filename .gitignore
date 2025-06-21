@@ -4,3 +4,7 @@ notes.txt
 rest.md
 .env
 image
+
+client/node_modules
+
+client/notes.txt
