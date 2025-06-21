@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
-import validator, { isMobilePhone } from 'validator';
+import validator from 'validator';
 
 const userSchema = new mongoose.Schema({
     name: {
-        type: string,
+        type: String,
         require: [true, 'Name field cannot be empty']
     },
     lastName: {
-        type: string
+        type: String
     },
     email: {
-        type: string,
+        type: String,
         require: [true, 'email field cannot be empty'],
         unique: [true, 'this email already exists.'],
         // match: [/\S+@\S+\.\S+/, 'Please enter a valid email address'],
@@ -22,16 +22,20 @@ const userSchema = new mongoose.Schema({
 
         // we can also validate email using regex or any other third party package like validator. It chksś if the email is in valid format like name@example.com.,we could also use regurlar expression using match;
     },
-    Phone: {
-        type: number,
-        validator: isMobilePhone()
+    phone: {
+        type: String, // Better to store as string to preserve leading 0s and country code
+        validate: {
+            validator: (value) => validator.isMobilePhone(value, 'any'),
+            message: 'Please enter a valid phone number.'
+        }
     },
     password: {
-        type: string,
+        type: String,
         require: [true, 'Password is required.'],
+        minlength: [6, "Password should be greater than 6 characters."]
     },
     location: {
-        type: string,
+        type: String,
         default: "India"
     }
 }, { timestamps: true })

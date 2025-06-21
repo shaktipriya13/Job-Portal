@@ -8,7 +8,10 @@ import morgan from 'morgan' //both cors and morgan are middlewares
 
 //! file imports
 import connectDB from './config/db.js';
+
+//* import routes
 import testRoutes from './routes/test.routes.js'
+import authRoutes from './routes/auth.routes.js'
 
 //below line means we are calling .env file in our application and our appln configure ho chuka ha
 dotenv.config();
@@ -28,6 +31,7 @@ app.use(morgan('dev'))
 
 //route
 app.use('/api/v1/test', testRoutes); //'/api/v1/test' is the naming convention we need to follow, uske bad we can add subroutes in the routes folder files
+app.use('/api/v1/auth', authRoutes);
 
 const port = process.env.PORT || 8080;
 //listen
