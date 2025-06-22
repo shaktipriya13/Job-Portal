@@ -1,6 +1,6 @@
 import jobsModels from "../models/jobs.models.js";
 
-const createJobController = async (req, res, next) => {
+export const createJobController = async (req, res, next) => {
     const { company, position } = req.body;
     try {
         //validation code
@@ -18,4 +18,9 @@ const createJobController = async (req, res, next) => {
     }
 }
 
-export default createJobController;
+export const getAllJobsController = async (req, res, next) => {
+    const jobs = await jobsModels.find({ createdBy: req.user.userId });
+    res.status(200).json({
+        totalJobs: jobs.length, jobs
+    })
+}
