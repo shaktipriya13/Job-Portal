@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from 'validator';
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -41,6 +42,14 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true })
 //timestamps ke through time is noted each time a new user is created
 //sorting, filtering can be done on basis of timestamps
+
+
+//fxn to encrypt password before saving in db
+userSchema.pre('save', async function () {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
+
 
 export default mongoose.model('User', userSchema);//this will create a User named table(or collection) inside our db job-portal
 // Mongoose automatically pluralizes and lowercases the model name('User'):

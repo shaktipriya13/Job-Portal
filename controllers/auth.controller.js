@@ -6,8 +6,6 @@ uisng jwt,bcrypt and mongoose */
 
 
 //import packagaes
-import bcrypt from "bcryptjs";
-import jsonwebtoken from "jsonwebtoken";
 import userModels from "../models/user.models.js";
 
 
@@ -33,7 +31,7 @@ export const registerController = async (req, res, next) => {
         //now we are validating is email already exists
         const existingUser = await userModels.findOne({ email });//	This is a Mongoose query that looks in the database for one user whose email matches the provided value.
         if (existingUser) {
-            next("Email already register. Please login.");  
+            next("Email already register. Please login.");
         }
         //once all above conditions are checked we then create a new user
         const user = await userModels.create({ name, email, password });
