@@ -13,6 +13,7 @@ import connectDB from './config/db.js';
 import testRoutes from './routes/test.routes.js'
 import userRoutes from './routes/user.routes.js'
 import authRoutes from './routes/auth.routes.js'
+import jobRoutes from './routes/jobs.routes.js'
 
 //& import middlewares
 import errMiddleware from './middlewares/errorHandler.middleware.js';//	Handles errors sent from controllers
@@ -37,6 +38,7 @@ app.use(morgan('dev'))
 app.use('/api/v1/test', testRoutes); //'/api/v1/test' is the naming convention we need to follow, uske bad we can add subroutes in the routes folder files
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/jobs', jobRoutes);
 
 
 
