@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 // onChange and onSubmit are not default functions, but they are standard event handler props provided by React to handle DOM events.
 const Register = () => {
     // const [name, setname] = useState("");
-    // const [lastname, setlastname] = useState("");
+    // const [lastName, setlastName] = useState("");
     // const [email, setemail] = useState("");
     // const [password, setpassword] = useState("");
 
     const [values, setvalues] = useState({
         //we are passing an object in useState which can be accessed through dot '.' operator
         name: "",
-        lastname: "",
+        lastName: "",
         email: "",
         password: ""
     });
@@ -47,8 +47,8 @@ const Register = () => {
                     </div>
 
                     <div className="mb-1">
-                        <label htmlFor="lastname" className="form-label">Last Name</label>
-                        <input type="text" className="form-control" name="lastname" value={values.lastname} onChange={handleChange} />
+                        <label htmlFor="lastName" className="form-label">Last Name</label>
+                        <input type="text" className="form-control" name="lastName" value={values.lastName} onChange={handleChange} />
                     </div>
 
                     <div className="mb-1">

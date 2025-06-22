@@ -11,7 +11,10 @@ import connectDB from './config/db.js';
 
 //* import routes
 import testRoutes from './routes/test.routes.js'
+import userRoutes from './routes/user.routes.js'
 import authRoutes from './routes/auth.routes.js'
+
+//& import middlewares
 import errMiddleware from './middlewares/errorHandler.middleware.js';//	Handles errors sent from controllers
 
 //below line means we are calling .env file in our application and our appln configure ho chuka ha
@@ -33,6 +36,7 @@ app.use(morgan('dev'))
 //route
 app.use('/api/v1/test', testRoutes); //'/api/v1/test' is the naming convention we need to follow, uske bad we can add subroutes in the routes folder files
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/user', userRoutes);
 
 
 

@@ -115,7 +115,7 @@ userSchema.set("toJSON", {
 
 // Hash password only if modified
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+    if (!this.isModified("password")) return next();//isModified is a builtin fxn
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
@@ -129,7 +129,10 @@ userSchema.methods.comparePassword = async function (userPassword) {//userPasswo
 
 // Create JWT
 userSchema.methods.createJWT = function () {
-    return JWT.sign({ userId: this._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    return JWT.sign(
+        { userId: this._id }, //payload
+        process.env.JWT_SECRET, //secret key
+        { expiresIn: "1d" }); //token expiry
 };
 
 export default mongoose.model("User", userSchema);
