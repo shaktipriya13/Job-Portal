@@ -1,5 +1,6 @@
 import jobsModels from "../models/jobs.models.js";
-
+import mongoose from "mongoose";
+import moment from "moment";
 
 export const createJobController = async (req, res, next) => {
     const { company, position } = req.body;
@@ -84,5 +85,145 @@ export const deleteJobController = async (req, res, next) => {
         res.status(200).json({ message: "Job deleted successfully." });
     } catch (error) {
         return next(new Error("Error in deleting job. Try again later."));
+    }
+};
+
+
+// following function will show to a particular user ki what is the status of each application he had applied for (rejected,interview,pending)
+// export const jobStatsController = async (req, res) => {
+//     // here we don't need any next parameter, as no middleware is needed
+//     //here we are going to execute our query(we need aggregation pipeline and jobs model)
+//     // jis user id se job create hua usi ko test krte time first login and usi id ka bearer token is to be sent,as it is protected route
+
+//     const stats = await jobsModels.aggregate([
+//         //search by user jobs
+//         {
+//             $match: {
+//                 createdBy: new mongoose.Types.ObjectId(req.user.userId)
+//             },
+//         },
+//         {
+//             $group: {
+//                 _id: "$status",
+//                 count: { $sum: 1 },
+//             },
+//         },
+//     ]);
+//     // set default stats
+//     const defaultStats = {
+//         pending: stats.pending || 0,
+//         reject: stats.reject || 0,
+//         interview: stats.interview || 0,
+//     };
+
+//     // setting filter for also monthly year stats
+//     let monthlyApplication = await jobsModels.aggregate([
+//         {
+//             $match: {
+//                 createdBy: new mongoose.Types.ObjectId(req.user.userId)
+//             },
+//         },
+//         {
+//             $group: {
+//                 _id: {
+//                     year: { $year: "$createdAt" },
+//                     month: { $month: "$createdAt" },
+//                 },
+//                 count: {
+//                     $sum: 1,
+//                 },
+//             },
+//         },
+//     ]);
+
+//     monthlyApplication = monthlyApplication
+//         .map((item) => {
+//             const {
+//                 _id: { year, month }, count,
+
+//             } = item;
+//             const date = moment().month(month - 1).year(year).format("MMM Y");
+//             return { date, count };
+//         })
+//         .reverse();
+
+//     res.status(200).json({ totalJobs: stats.length, defaultStats, monthlyApplication });
+
+// };
+export const jobStatsController = async (req, res) => {
+    try {
+        // Aggregate job counts by status for the logged-in user
+        const statsResult = await jobsModels.aggregate([
+            {
+                $match: {
+                    createdBy: new mongoose.Types.ObjectId(req.user.userId),
+                },
+            },
+            {
+                $group: {
+                    _id: "$status",
+                    count: { $sum: 1 },
+                },
+            },
+        ]);
+
+        // Convert array to object: { pending: X, reject: Y, interview: Z }
+        const defaultStats = {
+            pending: 0,
+            reject: 0,
+            interview: 0,
+        };
+
+        statsResult.forEach((item) => {
+            defaultStats[item._id] = item.count;
+        });
+
+        // Get monthly application stats for current user
+        let monthlyApplication = await jobsModels.aggregate([
+            {
+                $match: {
+                    createdBy: new mongoose.Types.ObjectId(req.user.userId),
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                    },
+                    count: { $sum: 1 },
+                },
+            },
+            {
+                $sort: {
+                    "_id.year": -1,
+                    "_id.month": -1,
+                },
+            },
+            {
+                $limit: 6, // latest 6 months
+            },
+        ]);
+
+        // Format date and reverse to show oldest first
+        monthlyApplication = monthlyApplication
+            .map((item) => {
+                const {
+                    _id: { year, month },
+                    count,
+                } = item;
+                const date = moment().month(month - 1).year(year).format("MMM Y");
+                return { date, count };
+            })
+            .reverse();
+
+        res.status(200).json({
+            totalJobs: statsResult.reduce((sum, item) => sum + item.count, 0),
+            defaultStats,
+            monthlyApplication,
+        });
+    } catch (error) {
+        console.error("Error in jobStatsController:", error);
+        res.status(500).json({ msg: "Something went wrong while getting stats." });
     }
 };

@@ -1,6 +1,6 @@
 import express from "express";
 import userAuth from "../middlewares/auth.middleware.js";
-import { createJobController, deleteJobController, getAllJobsController, updateJobcontroller } from './../controllers/jobs.controller.js';
+import { createJobController, deleteJobController, getAllJobsController, jobStatsController, updateJobcontroller } from './../controllers/jobs.controller.js';
 
 const router = express.Router();
 
@@ -18,5 +18,9 @@ router.patch('/update-job/:id', userAuth, updateJobcontroller);//here in this ro
 
 // 4. for deleting the job, note that the job must be delted only by the user who created it,so we provide auth for protection
 router.delete('/delete-job/:id', userAuth, deleteJobController);
+
+
+//5. get job stats and filter
+router.get('/job-stats', userAuth, jobStatsController);
 
 export default router;
