@@ -20,8 +20,49 @@ export const createJobController = async (req, res, next) => {
     }
 }
 
+
+// below controller fxn ke thorugh each user can filter out the status of his application acc. to his need
 export const getAllJobsController = async (req, res, next) => {
-    const jobs = await jobsModels.find({ createdBy: req.user.userId });
+    const { status, workType, search, sort } = req.query;
+    // conditions for searching filters
+    const queryObject = {
+        createdBy: req.user.userId
+    }
+
+    //logic for applying filters
+    if (status && status !== 'all') {
+        queryObject.status = status
+    }
+    if (workType && workType !== 'all') {
+        queryObject.workType = workType
+    }
+
+
+    //! now we are making filter for job search option by name, so that if the user types any letter even related to the job he gets the job exactly like for 'fullstack developer' if he types 'full', so we use regex here
+
+    if (search) {
+        queryObject.position = { $regex: search, $options: 'i' }//making the type insensitive so that the user can write in both uppercase/lowercase and the case is treated as same
+    }
+
+    let queryResult = jobsModels.find(queryObject);
+
+    //performing sorting
+    if (sort === 'latest') {
+        queryResult = queryResult.sort("-createdAt");//minus mtlb reverse order me
+    }
+    if (sort === 'oldest') {
+        queryResult = queryResult.sort("createdAt");
+    }
+    if (sort === 'a-z') {
+        queryResult = queryResult.sort('position');
+    }
+    if (sort === 'z-a') {
+        queryResult = queryResult.sort('-position');
+    }
+
+    const jobs = await queryResult;
+
+    // const jobs = await jobsModels.find({ createdBy: req.user.userId });
     res.status(200).json({
         totalJobs: jobs.length, jobs
     })
