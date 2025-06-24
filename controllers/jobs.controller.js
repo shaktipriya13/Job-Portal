@@ -60,13 +60,36 @@ export const getAllJobsController = async (req, res, next) => {
         queryResult = queryResult.sort('-position');
     }
 
+
+
+    // performing pagination
+    // & pagination :jyada jobs must not be shown on 1 page as application par load badhta ha
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // const totalJobs = await jobsModels.countDocuments(queryResult);//sir code
+    const totalJobs = await jobsModels.countDocuments(queryObject);
+    //jobs count
+    const numOfPage = Math.ceil(totalJobs / limit);
+
+
+    queryResult = queryResult.skip(skip).limit(limit);
+
     const jobs = await queryResult;
 
-    // const jobs = await jobsModels.find({ createdBy: req.user.userId });
+    // jobs on current page
+    const currentPageJobsCount = jobs.length;
+
+    // const jobs = await jobsModel.find({ createdBy: req.user.userId });
     res.status(200).json({
-        totalJobs: jobs.length, jobs
-    })
-}
+        totalJobs,
+        jobs,
+        currentPageJobsCount,
+        numOfPage,
+    });
+};
+
 
 export const updateJobcontroller = async (req, res, next) => {
     const { id } = req.params;//user will provide the id before requesting for update
