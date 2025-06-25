@@ -56,6 +56,16 @@ export const registerController = async (req, res, next) => {
     try {
         const { name, lastName, email, password, phone, location } = req.body;
 
+        //validate
+        if (!name) {
+            return next(new Error("Name is required"));
+        }
+        if (!email) {
+            return next(new Error("Please provide email"));
+        }
+        if (!password) {
+            return next(new Error("Please provide password"));
+        }
         // Check for existing user
         const existingUser = await userModels.findOne({ email });
         if (existingUser) {
