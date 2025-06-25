@@ -4,10 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import InputForm from '../components/shared/InputForm.jsx';
 // onChange is triggered whenever the value of the input field changes.
 // onChange and onSubmit are not default functions, but they are standard event handler props provided by React to handle DOM events.
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // to get something we will use useSelctor hook and to send a request we use useDispatcher hook
 import { showLoading, hideLoading } from '../redux/features/alertSlice.jsx'
 import axios from 'axios'
+import Spinner from '../components/shared/Spinner.jsx';
 
 const Register = () => {
     //hooks
@@ -21,6 +22,8 @@ const Register = () => {
     const [password, setpassword] = useState("");
     const [location, setlocation] = useState("");
 
+    //redux
+    const { loading } = useSelector(state => state.alerts);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,23 +51,26 @@ const Register = () => {
     };
     return (
         <>
-            <div className='form-container'>
-                <br />
-                <form className='card p-2' onSubmit={handleSubmit}>
-                    <img src="./src/assets/images/logo.png" alt="logo" height={250} width={400} />
+            {loading ? (<Spinner />) : (
 
-                    <InputForm htmlFor='name' name="name" labelText={'Name'} type={"text"} value={name} require={true} handleChange={(e) => setname(e.target.value)} />
-                    <InputForm htmlFor='lastname' name="lastname" labelText={'lastName'} type={"text"} value={lastName} handleChange={(e) => setlastName(e.target.value)} />
-                    <InputForm htmlFor='email' name="email" require={true} labelText={'Email'} type={"text"} value={email} handleChange={(e) => setemail(e.target.value)} />
-                    <InputForm htmlFor='phone' name="phone" labelText={'Phone'} type={"text"} value={phone} handleChange={(e) => setphone(e.target.value)} />
-                    <InputForm htmlFor='password' name="password" require={true} labelText={'Password'} type={"text"} value={password} handleChange={(e) => setpassword(e.target.value)} />
-                    <InputForm htmlFor='location' name="location" labelText={'Location'} type={"text"} value={location} handleChange={(e) => setlocation(e.target.value)} />
+                <div className='form-container'>
+                    <br />
+                    <form className='card p-2' onSubmit={handleSubmit}>
+                        <img src="./src/assets/images/logo.png" alt="logo" height={250} width={400} />
 
-                    <div className="d-flex justify-content-between"><p>Already Registered? <Link className='text-primary' to={'/login'}>Login Here</Link></p>
-                        <button type="submit" className="btn btn-success">Register</button>
-                    </div>
-                </form>
-            </div>
+                        <InputForm htmlFor='name' name="name" labelText={'Name'} type={"text"} value={name} require={true} handleChange={(e) => setname(e.target.value)} />
+                        <InputForm htmlFor='lastname' name="lastname" labelText={'lastName'} type={"text"} value={lastName} handleChange={(e) => setlastName(e.target.value)} />
+                        <InputForm htmlFor='email' name="email" require={true} labelText={'Email'} type={"text"} value={email} handleChange={(e) => setemail(e.target.value)} />
+                        <InputForm htmlFor='phone' name="phone" labelText={'Phone'} type={"text"} value={phone} handleChange={(e) => setphone(e.target.value)} />
+                        <InputForm htmlFor='password' name="password" require={true} labelText={'Password'} type={"text"} value={password} handleChange={(e) => setpassword(e.target.value)} />
+                        <InputForm htmlFor='location' name="location" labelText={'Location'} type={"text"} value={location} handleChange={(e) => setlocation(e.target.value)} />
+
+                        <div className="d-flex justify-content-between"><p>Already Registered? <Link className='text-primary' to={'/login'}>Login Here</Link></p>
+                            <button type="submit" className="btn btn-success">Register</button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
         </>
     );
