@@ -1,20 +1,50 @@
 //our goal is ki code size bache and logic badhe
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import InputForm from '../components/InputForm';
+import { Link, useNavigate } from 'react-router-dom';
+import InputForm from '../components/shared/InputForm.jsx';
 // onChange is triggered whenever the value of the input field changes.
 // onChange and onSubmit are not default functions, but they are standard event handler props provided by React to handle DOM events.
+import { useDispatch } from 'react-redux';
+// to get something we will use useSelctor hook and to send a request we use useDispatcher hook
+import { showLoading, hideLoading } from '../redux/features/alertSlice.jsx'
+import axios from 'axios'
+
 const Register = () => {
+    //hooks
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const [name, setname] = useState("");
     const [lastName, setlastName] = useState("");
     const [email, setemail] = useState("");
+    const [phone, setphone] = useState("");
     const [password, setpassword] = useState("");
     const [location, setlocation] = useState("");
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ name, lastName, email, password, location });
+        try {
+            if (!name || !email || !password) {
+                return alert("Please provide the required fields.")
+            }
+            dispatch(showLoading())
+            const { data } = await axios.post('/api/v1/auth/register', { name, lastName, email, phone, password, location });
+
+            dispatch(hideLoading())
+
+            if (data.success) {
+                alert("Register successful.");
+                //after registering we navigate the user to the dashboard, for this we use useNavigate hook
+                navigate('/dashboard');
+            }
+
+            //now we send request to backend using axios after initial loading
+        } catch (err) {
+            dispatch(hideLoading());
+            alert("Invalid Form details . Please try again.")
+            console.log(err);
+        }
     };
     return (
         <>
@@ -26,6 +56,7 @@ const Register = () => {
                     <InputForm htmlFor='name' name="name" labelText={'Name'} type={"text"} value={name} require={true} handleChange={(e) => setname(e.target.value)} />
                     <InputForm htmlFor='lastname' name="lastname" labelText={'lastName'} type={"text"} value={lastName} handleChange={(e) => setlastName(e.target.value)} />
                     <InputForm htmlFor='email' name="email" require={true} labelText={'Email'} type={"text"} value={email} handleChange={(e) => setemail(e.target.value)} />
+                    <InputForm htmlFor='phone' name="phone" labelText={'Phone'} type={"text"} value={phone} handleChange={(e) => setphone(e.target.value)} />
                     <InputForm htmlFor='password' name="password" require={true} labelText={'Password'} type={"text"} value={password} handleChange={(e) => setpassword(e.target.value)} />
                     <InputForm htmlFor='location' name="location" labelText={'Location'} type={"text"} value={location} handleChange={(e) => setlocation(e.target.value)} />
 

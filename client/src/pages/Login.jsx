@@ -1,18 +1,17 @@
 //our goal is ki code size bache and logic badhe
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import InputForm from '../components/InputForm';
+import InputForm from '../components/shared/InputForm';
 // onChange is triggered whenever the value of the input field changes.
 // onChange and onSubmit are not default functions, but they are standard event handler props provided by React to handle DOM events.
 const Register = () => {
-    const [name, setname] = useState("");
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({ name, email, password });
+        console.log({ email, password });
     };
     return (
         <>

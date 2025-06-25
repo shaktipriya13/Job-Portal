@@ -54,7 +54,7 @@ import userModels from "../models/user.models.js";
 
 export const registerController = async (req, res, next) => {
     try {
-        const { name, lastName, email, password, phone, location } = req.body;
+        const { name, lastName, email, phone, password, location } = req.body;
 
         //validate
         if (!name) {
@@ -73,7 +73,7 @@ export const registerController = async (req, res, next) => {
         }
 
         // Create user
-        const user = await userModels.create({ name, lastName, email, password, phone, location });
+        const user = await userModels.create({ name, lastName, email, phone, password, location });
         const token = user.createJWT();
 
         // Send response

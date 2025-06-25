@@ -87,10 +87,7 @@ const userSchema = new mongoose.Schema(
         },
         phone: {
             type: String,
-            validate: {
-                validator: (value) => validator.isMobilePhone(value, "any"),
-                message: "Please enter a valid phone number."
-            }
+
         },
         password: {
             type: String,
