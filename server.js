@@ -200,6 +200,10 @@
 // });
 
 
+//api documentation exports
+import swaggerUi from 'swagger-ui-express'
+import swaggerJSDoc from 'swagger-jsdoc';
+
 import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
@@ -218,6 +222,27 @@ import errMiddleware from './middlewares/errorHandler.middleware.js';
 dotenv.config();
 
 connectDB();
+
+//swagger api config
+//swagger api options
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "Job Portal Application",
+            description: "Node Expressjs Job Portal Application"
+        },
+        //when u deploy backend write server url here, we put here arrays, as we can have here multiple hosting providers allows
+        server: [
+            {
+                url: "http://localhost:8080"
+            },
+        ],
+    },
+    apis: ['./routes/*.js'],
+};
+
+const spec = swaggerJSDoc(options);
 
 const app = express();
 
@@ -256,6 +281,9 @@ app.use('/api/v1/test', testRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/jobs', jobRoutes);
+
+// homeroute Route
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(spec));
 
 app.use(errMiddleware);
 
