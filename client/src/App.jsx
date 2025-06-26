@@ -6,7 +6,7 @@ import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import { ToastContainer } from 'react-toastify';
-import PrivateRoute from './components/routes/PrivateRoute.js'
+import PrivateRoute from './components/routes/PrivateRoute.jsx'
 
 function App() {
 

@@ -1,6 +1,6 @@
 // // store.js
 // import { configureStore } from "@reduxjs/toolkit";
-// import { alertReducer } from "./features/alertSlice.jsx";
+// import { alertReducer } from "./features/x";
 
 // const store = configureStore({
 //     reducer: {
