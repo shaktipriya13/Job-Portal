@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { hideLoading, showLoading } from '../redux/features/alertSlice';
 import Spinner from '../components/shared/Spinner';
+import { toast } from 'react-toastify';
+
 
 // onChange is triggered whenever the value of the input field changes.
 // onChange and onSubmit are not default functions, but they are standard event handler props provided by React to handle DOM events.
@@ -30,13 +32,13 @@ const Register = () => {
                 //we are getting tokens during login to ensure security in private routes
                 dispatch(hideLoading());
                 localStorage.setItem('token', data.token);
-                alert('Login successfully.');
+                toast.success('Login successfully.');
                 navigate('/dashboard')
             }
             dispatch(hideLoading());
         } catch (err) {
             dispatch(hideLoading());
-            alert("Invalid credentials. please try again.")
+            toast.error("Invalid credentials. please try again.")
             console.log(err);
         }
     };

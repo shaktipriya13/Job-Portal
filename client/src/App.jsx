@@ -5,12 +5,14 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
-
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 
   return (
     <>
+      {/* {" "} */}
+      <ToastContainer />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<Login />} />

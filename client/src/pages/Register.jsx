@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showLoading, hideLoading } from '../redux/features/alertSlice.jsx'
 import axios from 'axios'
 import Spinner from '../components/shared/Spinner.jsx';
+import { toast } from 'react-toastify';
+
 
 const Register = () => {
     //hooks
@@ -29,7 +31,7 @@ const Register = () => {
         e.preventDefault();
         try {
             if (!name || !email || !password) {
-                return alert("Please provide the required fields.")
+                return toast.error("Please provide the required fields.")
             }
             dispatch(showLoading())
             const { data } = await axios.post('/api/v1/auth/register', { name, lastName, email, phone, password, location });
@@ -37,7 +39,7 @@ const Register = () => {
             dispatch(hideLoading())
 
             if (data.success) {
-                alert("Register successful.");
+                toast.success("Register successful.");
                 //after registering we navigate the user to the dashboard, for this we use useNavigate hook
                 navigate('/dashboard');
             }
@@ -45,7 +47,7 @@ const Register = () => {
             //now we send request to backend using axios after initial loading
         } catch (err) {
             dispatch(hideLoading());
-            alert("Invalid Form details . Please try again.")
+            toast.error("Invalid Form details . Please try again.")
             console.log(err);
         }
     };
