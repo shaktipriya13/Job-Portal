@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import { ToastContainer } from 'react-toastify';
 import PrivateRoute from './components/routes/PrivateRoute.jsx'
+import PublicRoutes from './components/routes/PublicRoutes.jsx'
 
 function App() {
 
@@ -15,9 +16,21 @@ function App() {
       {/* {" "} */}
       <ToastContainer />
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
+        <Route path='/' element={
+          <PublicRoutes>
+            <HomePage />
+          </PublicRoutes>
+        } />
+        <Route path='/login' element={
+          <PublicRoutes>
+            <Login />
+          </PublicRoutes>
+        } />
+        <Route path='/register' element={
+          <PublicRoutes>
+            <Register />
+          </PublicRoutes>
+        } />
         <Route path='/dashboard'
           element={
             // made dashboard a protected route
