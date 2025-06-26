@@ -16,7 +16,7 @@
 
 
 import express from 'express';
-import { updateUsercontroller } from '../controllers/user.controller.js';
+import { getUserData, updateUsercontroller } from '../controllers/user.controller.js';
 import userAuth from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
@@ -90,6 +90,12 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
+
+// routes
+// get user data || post
+router.post('/getUser', userAuth, getUserData);
+
+//update user || put
 router.put('/update-user', userAuth, updateUsercontroller);
 
 export default router;

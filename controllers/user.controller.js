@@ -36,3 +36,32 @@ export const updateUsercontroller = async (req, res, next) => {
         return next(new Error("Error in updating fields:", err));
     }
 }
+
+
+// get user data fxn
+export const getUserData = async (req, res, next) => {
+    try {
+        const user = await userModels.findById({ _id: req.body.user.userId });
+        user.password = undefined;//this is to hide password in the inspect element
+        if (!user) {//if user not found in the db
+            return res.status(200).send({
+                message: 'user not found',
+                success: false,
+            })
+        }
+        else {
+            res.status(200).send({
+                success: true,
+                data: user,
+            });
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: "auth error",
+            success: false,
+            error: err.message
+        })
+    }
+};
